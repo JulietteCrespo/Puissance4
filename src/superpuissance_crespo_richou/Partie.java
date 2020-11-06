@@ -39,6 +39,9 @@ public class Partie {
     public Grille initialiserPartie(){
         // 1- on créer la grille
         Grille newGrille = new Grille();
+        //jjjjjjjjjjjjjjj
+        
+                
         // 2 - on vide la grille
         newGrille.viderGrille();
         // 3 - on place les trous noir et désintégrateur 

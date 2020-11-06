@@ -15,7 +15,7 @@ public class SuperPuissance_CRESPO_RICHOU {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
+        // TODO code application logic here lllllllllllllllllllllllllllllllllllL
         Partie unePartie= new Partie();
         unePartie.debuterPartie();
     }

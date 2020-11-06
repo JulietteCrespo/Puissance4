@@ -17,7 +17,7 @@ public class SuperPuissance_CRESPO_RICHOU {
     public static void main(String[] args) {
         // TODO code application logic here lllllllllllllllllllllllllllllllllllL
         //d,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
-        
+        // MMMMMMMMMMMM
         Partie unePartie= new Partie();
         unePartie.debuterPartie();
     }

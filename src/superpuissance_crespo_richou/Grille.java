@@ -103,27 +103,30 @@ public class Grille {
    }
 /////////////////////////////////////////   
     public boolean etreGagnantePourJoueur(Joueur unJoueur){
+        boolean resultat=false;
        String couleurG= unJoueur.couleur; //on défini la couleur du joueur gagnant
        // 1 - LIGNE : on verifie si il y a des lignes gagnantes
-        for (int i=0;i<5;i++){ // pas besoin n'alller jusqu'a la ligne 6 car on verifie deja 
-           for(int j=0;j<3;j++){
-               if (grille[i][j].jetonCourant!=null){
-              if (grille[i][j].jetonCourant.couleur==grille[i+1][j].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i+2][j].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i+3][j].jetonCourant.couleur ) {
+        for (int i=0;i<6;i++){ // pas besoin n'alller jusqu'a la ligne 6 car on verifie deja 
+           for(int j=0;j<4;j++){
+               if (grille[i][j].jetonCourant!=null && grille[i][j+1].jetonCourant!=null && grille[i][j+2].jetonCourant!=null && grille[i][j+3].jetonCourant!=null){
+              if (grille[i][j].jetonCourant.couleur==grille[i][j+1].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i][j+2].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i][j+3].jetonCourant.couleur ) {
                    if (grille[i][j].jetonCourant.couleur==couleurG){
-                    return true;   
+                       System.out.print(unJoueur.nom +" est le gagnant");
+                    resultat =true;
+                    break;
                    }
                 }
               }
             }
        } 
         // 2 - COLONNE : on verifie si il y a des colonnes gagnantes
-        for (int i=0;i<2;i++){
-           for(int j=0;j<6;j++){
-               if (grille[i][j].jetonCourant!=null){
-              if (grille[i][j].jetonCourant.couleur==grille[i][j+1].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i][j+2].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i][j+3].jetonCourant.couleur ) {
-                  if (grille[i][j].jetonCourant.couleur==couleurG){
-                    return true;   
-                   }
+        for (int i=0;i<3;i++){
+           for(int j=0;j<7;j++){
+               if (grille[i][j].jetonCourant!=null && grille[i+1][j].jetonCourant!=null && grille[i+2][j].jetonCourant!=null && grille[i+3][j].jetonCourant!=null){
+              if ( lireCouleurDuJeton(i+3,j).equals(couleurG) && lireCouleurDuJeton(i,j).equals(couleurG) && lireCouleurDuJeton(i+1,j).equals(couleurG) && lireCouleurDuJeton(i+2,j).equals(couleurG)) {
+                    System.out.print(unJoueur.nom +" est le gagnant");
+                    resultat =true;
+                    break;
                 }
                }
             }
@@ -131,28 +134,33 @@ public class Grille {
         // 3 - DIAGONALE A PENTE POSITIVE : on verifie si il y a des diagonales a pente positive gagnante   
         for (int i=0;i<3;i++){
            for(int j=0;j<4;j++){
-               if (grille[i][j].jetonCourant!=null){
+               if (grille[i][j].jetonCourant!=null && grille[i+1][j+1].jetonCourant!=null && grille[i+2][j+2].jetonCourant!=null && grille[i+3][j+3].jetonCourant!=null){
               if (grille[i][j].jetonCourant.couleur==grille[i+1][j+1].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i+2][j+2].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i+3][j+3].jetonCourant.couleur ) {
                   if (grille[i][j].jetonCourant.couleur==couleurG){
-                    return true;   
+                      System.out.print(unJoueur.nom +" est le gagnant");
+                    resultat =true;
+                    break;
                    }
                 }
                }
             }
        }  
         // 4 - DIAGONALE A PENTE NEGATIVE : on verifie si il y a des diagonales a pente negative gagnant  
-      for (int i=5;i>3;i--){
-           for(int j=6;j>4;j--){
-               if (grille[i][j].jetonCourant!=null){
-              if (grille[i][j].jetonCourant.couleur==grille[i-1][j-1].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i-2][j-2].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i-3][j-3].jetonCourant.couleur ) {
+      for (int i=5;i>2;i--){
+           for(int j=0;j<4;j++){
+               if (grille[i][j].jetonCourant!=null && grille[i-1][j+1].jetonCourant!=null && grille[i-2][j+2].jetonCourant!=null && grille[i-3][j+3].jetonCourant!=null){
+              if (grille[i][j].jetonCourant.couleur==grille[i-1][j+1].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i-2][j+2].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i-3][j+3].jetonCourant.couleur ) {
                   if (grille[i][j].jetonCourant.couleur==couleurG){
-                    return true;   
+                      System.out.print(unJoueur.nom +" est le gagnant");
+                    resultat =true;
+                    break;   
                    }
                 }
                }
             }
-       }    
-    return false;  
+       }  
+      
+    return resultat;  
     }
 /////////////////////////////////////////    
     public void tasserGrille(int ligne, int colonne){
@@ -167,20 +175,10 @@ public class Grille {
     } 
  /////////////////////////////////////////   
     public boolean colonneRemplie( int colonne){
-       int c; // on creer un compteur
-       c=0;
-       for (int i=0;i<6;i++){
-           if (grille[i][colonne]==null){
-               return false;
-                }
-            else {
-               c++; // si la cellule n'est pas vide on ajoute au compteur
-             }
-        }
-       if (c==6){ // si c=6 alors la ligne est remplie 
+       if (grille[0][colonne].jetonCourant!=null){ 
         return true;
         }
-    return false;   
+       return false;   
     }
 /////////////////////////////////////////     
     public boolean placerTrouNoir(int i,int j ){

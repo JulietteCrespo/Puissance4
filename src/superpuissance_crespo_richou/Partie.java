@@ -165,16 +165,22 @@ public class Partie {
                  //---- on demande ou il veut jouer
                  System.out.println( joueurCourant.nom + " où veut tu jouer ? " );
                  System.out.println( " colonne : " );
-                 int newcolonne=sc.nextInt()-1;
+                 int colonne=sc.nextInt();
                  // vérifie si la saisie est vrai
-                 while (newcolonne>6 || newcolonne<0){
+                 while (colonne>7 || colonne<0){
                      System.out.println( "Erreur de saisie veillez resaisir :" );
-                     newcolonne=sc.nextInt()-1;
+                     colonne=sc.nextInt();
                  }
                  // vérifie si la conne est pleine
-                 while(GrilleJeu.colonneRemplie(newcolonne) != true){
-                     System.out.println( "La colonne est pleine veillez resaisir :" );
-                     newcolonne=sc.nextInt()-1;
+                 int newcolonne=colonne-1;
+                 boolean resultat;
+                 resultat=GrilleJeu.colonneRemplie(newcolonne);
+                 if (resultat==true){
+                     while(resultat){
+                         System.out.println( "La colonne est pleine veillez resaisir :" );
+                         newcolonne=sc.nextInt()-1;
+                          resultat=GrilleJeu.colonneRemplie(newcolonne);
+                        }
                  }
                  // la collonne n'est pas pleine on peu ajouter le jeton
                  int newligne;//on recuper la ligne viser
@@ -260,7 +266,7 @@ public class Partie {
              }while (findeboucle=!true);
          
          
-         }while (GrilleJeu.etreRemplie()==false || GrilleJeu.etreGagnantePourJoueur(ListesJoueur[1]) || GrilleJeu.etreGagnantePourJoueur(ListesJoueur[0]));
+         }while (GrilleJeu.etreRemplie()==false || GrilleJeu.etreGagnantePourJoueur(ListesJoueur[1])==false || GrilleJeu.etreGagnantePourJoueur(ListesJoueur[0])==false);
      
         
         

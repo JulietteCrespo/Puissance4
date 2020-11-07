@@ -106,7 +106,8 @@ public boolean affecterJeton(Jeton unjeton){
           return false;
       }
       else{
-          supprimerJeton(); // si on active le trou noir on supprime la valeur du jeton
+          supprimerJeton();// si on active le trou noir on supprime la valeur du jeton
+          trouNoir=false;
           return true;
       }
   }

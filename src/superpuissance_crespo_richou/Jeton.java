@@ -39,9 +39,9 @@ public class Jeton {
  @Override
  public String toString(){
      if  ("Rouge".equals(couleur)){ // fonction eguals permet de remplacer ==
-         return "R";
+         return " R";
      }
-     return "J";
+     return " J";
  }
   
 }

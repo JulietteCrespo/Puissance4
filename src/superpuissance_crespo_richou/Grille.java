@@ -105,43 +105,51 @@ public class Grille {
     public boolean etreGagnantePourJoueur(Joueur unJoueur){
        String couleurG= unJoueur.couleur; //on défini la couleur du joueur gagnant
        // 1 - LIGNE : on verifie si il y a des lignes gagnantes
-        for (int i=0;i<4;i++){ // pas besoin n'alller jusqu'a la ligne 6 car on verifie deja 
-           for(int j=0;j<7;j++){
+        for (int i=0;i<5;i++){ // pas besoin n'alller jusqu'a la ligne 6 car on verifie deja 
+           for(int j=0;j<3;j++){
+               if (grille[i][j].jetonCourant!=null){
               if (grille[i][j].jetonCourant.couleur==grille[i+1][j].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i+2][j].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i+3][j].jetonCourant.couleur ) {
                    if (grille[i][j].jetonCourant.couleur==couleurG){
                     return true;   
                    }
                 }
+              }
             }
        } 
         // 2 - COLONNE : on verifie si il y a des colonnes gagnantes
-        for (int i=0;i<6;i++){
-           for(int j=0;j<3;j++){
+        for (int i=0;i<2;i++){
+           for(int j=0;j<6;j++){
+               if (grille[i][j].jetonCourant!=null){
               if (grille[i][j].jetonCourant.couleur==grille[i][j+1].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i][j+2].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i][j+3].jetonCourant.couleur ) {
                   if (grille[i][j].jetonCourant.couleur==couleurG){
                     return true;   
                    }
                 }
+               }
             }
        } 
         // 3 - DIAGONALE A PENTE POSITIVE : on verifie si il y a des diagonales a pente positive gagnante   
         for (int i=0;i<3;i++){
            for(int j=0;j<4;j++){
+               if (grille[i][j].jetonCourant!=null){
               if (grille[i][j].jetonCourant.couleur==grille[i+1][j+1].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i+2][j+2].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i+3][j+3].jetonCourant.couleur ) {
                   if (grille[i][j].jetonCourant.couleur==couleurG){
                     return true;   
                    }
                 }
+               }
             }
        }  
         // 4 - DIAGONALE A PENTE NEGATIVE : on verifie si il y a des diagonales a pente negative gagnant  
-      for (int i=6;i>3;i--){
-           for(int j=7;j>4;j--){
+      for (int i=5;i>3;i--){
+           for(int j=6;j>4;j--){
+               if (grille[i][j].jetonCourant!=null){
               if (grille[i][j].jetonCourant.couleur==grille[i-1][j-1].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i-2][j-2].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i-3][j-3].jetonCourant.couleur ) {
                   if (grille[i][j].jetonCourant.couleur==couleurG){
                     return true;   
                    }
                 }
+               }
             }
        }    
     return false;  

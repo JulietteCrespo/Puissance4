@@ -88,11 +88,11 @@ public class Partie {
         for(int k=0;k<2;k++){ // pour les deux joueurs
            for (int i =0; i<21; i++){
            if ("Rouge".equals(ListesJoueur[k].couleur)){
-                 ListesJoueur[k].ajouterJeton(JetonRouge); // on ajoute les jetons au tableau
+                 ListesJoueur[k].ListeJeton[i]= JetonRouge;// on ajoute les jetons au tableau
                  //System.out.println(ListesJoueur[k].couleur);
                 }
                 else {
-                  ListesJoueur[k].ajouterJeton(JetonJaune);
+                  ListesJoueur[k].ListeJeton[i]= JetonJaune;
                   //System.out.println(ListesJoueur[k].couleur);
                 }
            } 
@@ -162,44 +162,20 @@ public class Partie {
              if ("1".equals(action)){ // Choisi de joueur
                  
                  findeboucle=true;
-                 
-                 int newcolonne;
-                 /* 
-                 int newligne;
-                  //---- on demande ou il veut jouer
-                     System.out.println( joueurCourant.nom + " où veut tu jouer ? " );
-                     System.out.println( " colonne : " );
-                     newcolonne=sc.nextInt();
-                     
-                     
-                     //on regarde si la colonne est pleine
-                    
-                 if (GrilleJeu.colonneRemplie(newcolonne)==false){
-                     newligne=GrilleJeu.ajouterJetonDansColonne(joueurCourant.ListeJeton[joueurCourant.nombreJetonsRestant-1], newcolonne);
-                     joueurCourant.nombreJetonsRestant--; //on lui enlever donc le jeton
+                 //---- on demande ou il veut jouer
+                 System.out.println( joueurCourant.nom + " où veut tu jouer ? " );
+                 System.out.println( " colonne : " );
+                 int newcolonne=sc.nextInt()-1;
+                 // vérifie si la saisie est vrai
+                 while (newcolonne>6 || newcolonne<0){
+                     System.out.println( "Erreur de saisie veillez resaisir :" );
+                     newcolonne=sc.nextInt()-1;
                  }
-                 else {
-                     do{
-                         System.out.println( "La colonne est plaine veillier en choisir une autre" );
-                         System.out.println( " colonne : " );
-                         newcolonne=sc.nextInt(); 
-                     } while(GrilleJeu.colonneRemplie(newcolonne)==false);
+                 // vérifie si la conne est pleine
+                 while(GrilleJeu.colonneRemplie(newcolonne) != true){
+                     System.out.println( "La colonne est pleine veillez resaisir :" );
+                     newcolonne=sc.nextInt()-1;
                  }
-                 
-                 */
-                 
-                 do {                
-                     //---- on demande ou il veut jouer
-                     System.out.println( joueurCourant.nom + " où veut tu jouer ? " );
-                     System.out.println( " colonne : " );
-                     String colonne=sc.nextLine();
-                     
-                     newcolonne=Integer.parseInt(colonne);// on converti colonne en int
-                     //on regarde si la colonne est pleine  
-                    }while(GrilleJeu.colonneRemplie(newcolonne)==false);
-                 
-                 
-                 
                  // la collonne n'est pas pleine on peu ajouter le jeton
                  int newligne;//on recuper la ligne viser
                  newligne=GrilleJeu.ajouterJetonDansColonne(joueurCourant.ListeJeton[joueurCourant.nombreJetonsRestant-1], newcolonne);
@@ -218,7 +194,6 @@ public class Partie {
                      GrilleJeu.grille[newligne][newcolonne].recupererDesintegrateur();
                      joueurCourant.nombreDesintegrateurs++; 
                  }
-                 
                  // on change de joueur
                  if (joueurCourant == ListesJoueur[0]){
                      joueurCourant = ListesJoueur[1];
@@ -285,7 +260,7 @@ public class Partie {
              }while (findeboucle=!true);
          
          
-         }while (GrilleJeu.etreRemplie()==false || GrilleJeu.etreGagnantePourJoueur(ListesJoueur[1]) || GrilleJeu.etreGagnantePourJoueur(ListesJoueur[2]));
+         }while (GrilleJeu.etreRemplie()==false || GrilleJeu.etreGagnantePourJoueur(ListesJoueur[1]) || GrilleJeu.etreGagnantePourJoueur(ListesJoueur[0]));
      
         
         

@@ -38,37 +38,42 @@ public class Partie {
 /////////////////////////////////////////       
     public Grille initialiserPartie(){
         // 1- on créer la grille
-        Grille newGrille = new Grille();
-        //jjjjjjjjjjjjjjj
-        
-                
+        Grille newGrille = new Grille(); 
         // 2 - on vide la grille
         newGrille.viderGrille();
         // 3 - on place les trous noir et désintégrateur 
         // ------------ on défine 3 trous noirs au assard
         Random r = new Random();
-        int ligneT = r.nextInt(6);
-        int colonneT =r.nextInt(7);
+        
         for (int k=0; k<3;k++){
-           newGrille.placerTrouNoir(ligneT,colonneT);   
+           int ligneT = r.nextInt(6);
+           int colonneT =r.nextInt(7);
+           if (newGrille.placerTrouNoir(ligneT,colonneT)==true){
+            newGrille.placerTrouNoir(ligneT,colonneT); 
+           }
+           
         }
+        
         // ------------ on défine 2 trous noirs au assard qui cache des désintégrateurs 
-        int ligneTD =r.nextInt(6);
-        int colonneTD =r.nextInt(7);
+        
         for (int k=0; k<2;k++){
-           if (newGrille.placerTrouNoir(ligneTD,colonneTD)==true && newGrille.placerDesintegrateur(ligneTD, colonneTD)==true ){
+            int ligneTD =r.nextInt(6);
+            int colonneTD =r.nextInt(7);
+           if (newGrille.grille[ligneTD][colonneTD].trouNoir==false && newGrille.grille[ligneTD][colonneTD].desintegrateur==false ){
+               
                newGrille.placerTrouNoir(ligneTD,colonneTD );
-               newGrille.placerDesintegrateur(ligneTD, colonneTD); 
+               newGrille.placerDesintegrateur(ligneTD, colonneTD);
+              
            }
            else{
                k--; // si il y un deja un desintegrateur ou un troue noir on ne fait rien et on retir au hasrd une cellule
            }
         }
-        // ------------ de la meme maniére de présedament, on défine 3 désintégrateurs
-        int ligneD =r.nextInt(6);
-        int colonneD =r.nextInt(7);
+        // ------------ de la meme maniére de présedament, on défine 3 désintégrateur
         for (int k=0; k<3;k++){
-           if (newGrille.placerTrouNoir(ligneD,colonneD)==true && newGrille.placerDesintegrateur(ligneD, colonneD)==true ){
+            int ligneD =r.nextInt(6);
+            int colonneD =r.nextInt(7);
+           if (newGrille.grille[ligneD][colonneD].trouNoir==false && newGrille.grille[ligneD][colonneD].desintegrateur==false){
                newGrille.placerDesintegrateur(ligneD, colonneD); 
            }
            else{
@@ -78,19 +83,24 @@ public class Partie {
         // 4 - On créer les Jetons  
         Jeton JetonRouge =new Jeton("Rouge");
         Jeton JetonJaune = new Jeton("Jaune");
+        
         // 5 - On remplie le tableau des joueurs avec les jetons de la meme couleur
-        for (int j=0; j<2; j++){ // de boucle pour les deux joueurs
+        for(int k=0;k<2;k++){ // pour les deux joueurs
            for (int i =0; i<21; i++){
-              if ("Rouge".equals(ListesJoueur[j].couleur)){
-                 ListesJoueur[j].ajouterJeton(JetonRouge); // on ajoute les jetons au tableau
+           if ("Rouge".equals(ListesJoueur[k].couleur)){
+                 ListesJoueur[k].ajouterJeton(JetonRouge); // on ajoute les jetons au tableau
+                 //System.out.println(ListesJoueur[k].couleur);
                 }
                 else {
-                  ListesJoueur[j].ajouterJeton(JetonJaune);
+                  ListesJoueur[k].ajouterJeton(JetonJaune);
+                  //System.out.println(ListesJoueur[k].couleur);
                 }
            } 
-        }
+        }  
+        
         return newGrille;  
     }
+
 
 ////////////////////////////////////////    
 
@@ -120,7 +130,7 @@ public class Partie {
      ListesJoueur[1].nombreJetonsRestant=21;
      
      // 4- On députer la partie
-     System.out.println("---------------------------------------");
+     
      Grille GrilleJeu ; // on recupére notre grille de jeu 
      GrilleJeu=initialiserPartie();
      
@@ -133,8 +143,9 @@ public class Partie {
      else{
          joueurCourant = ListesJoueur[1]; 
      }
-     System.out.println( joueurCourant.nom + " c'est à toi commencer ! " );
+     System.out.println( joueurCourant.nom + " -> c'est à toi commencer ! " );
      int action1;
+     
      // 6- On commence a jouer
      do{ 
          //-------- Affiche grille
@@ -144,15 +155,39 @@ public class Partie {
          boolean findeboucle=false;
          do{
              
-             System.out.println( joueurCourant.nom + " où veut tu faire ? " );
+             System.out.println( joueurCourant.nom + " que veut tu faire ? " );
              System.out.println( " 1 - Jouer\n 2 - Récuperer un jeton\n 3 - Désintégrer " );
              String action=sc.nextLine();
-             
-             action1=Integer.parseInt(action);
-         
-             if (1==action1){ // Choisi de joueur
+            
+             if ("1".equals(action)){ // Choisi de joueur
+                 
                  findeboucle=true;
+                 
                  int newcolonne;
+                 /* 
+                 int newligne;
+                  //---- on demande ou il veut jouer
+                     System.out.println( joueurCourant.nom + " où veut tu jouer ? " );
+                     System.out.println( " colonne : " );
+                     newcolonne=sc.nextInt();
+                     
+                     
+                     //on regarde si la colonne est pleine
+                    
+                 if (GrilleJeu.colonneRemplie(newcolonne)==false){
+                     newligne=GrilleJeu.ajouterJetonDansColonne(joueurCourant.ListeJeton[joueurCourant.nombreJetonsRestant-1], newcolonne);
+                     joueurCourant.nombreJetonsRestant--; //on lui enlever donc le jeton
+                 }
+                 else {
+                     do{
+                         System.out.println( "La colonne est plaine veillier en choisir une autre" );
+                         System.out.println( " colonne : " );
+                         newcolonne=sc.nextInt(); 
+                     } while(GrilleJeu.colonneRemplie(newcolonne)==false);
+                 }
+                 
+                 */
+                 
                  do {                
                      //---- on demande ou il veut jouer
                      System.out.println( joueurCourant.nom + " où veut tu jouer ? " );
@@ -161,7 +196,10 @@ public class Partie {
                      
                      newcolonne=Integer.parseInt(colonne);// on converti colonne en int
                      //on regarde si la colonne est pleine  
-                    }while(GrilleJeu.colonneRemplie(newcolonne)==true);
+                    }while(GrilleJeu.colonneRemplie(newcolonne)==false);
+                 
+                 
+                 
                  // la collonne n'est pas pleine on peu ajouter le jeton
                  int newligne;//on recuper la ligne viser
                  newligne=GrilleJeu.ajouterJetonDansColonne(joueurCourant.ListeJeton[joueurCourant.nombreJetonsRestant-1], newcolonne);
@@ -182,15 +220,15 @@ public class Partie {
                  }
                  
                  // on change de joueur
-                 if (joueurCourant == ListesJoueur[1]){
-                     joueurCourant = ListesJoueur[2];
+                 if (joueurCourant == ListesJoueur[0]){
+                     joueurCourant = ListesJoueur[1];
                     }
                  else{
-                     joueurCourant = ListesJoueur[1];
+                     joueurCourant = ListesJoueur[0];
                     }
                  // l'autre joueur peux joueur
                 }
-             else if (action1==2){// Choisi de retiré un jeton
+             else if ("2".equals(action)){// Choisi de retiré un jeton
                  findeboucle=true;
                  int newcolonne;
                  int newligne;
@@ -217,7 +255,7 @@ public class Partie {
                     }
                  
                  }
-             else if (action1==3 && joueurCourant.nombreDesintegrateurs>0 ){  // désintégration
+             else if ("3".equals(action) && joueurCourant.nombreDesintegrateurs>0 ){  // désintégration
                  findeboucle=true;
                  int newcolonne;
                  int newligne;

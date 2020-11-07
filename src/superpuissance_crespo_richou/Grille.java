@@ -16,6 +16,14 @@ public class Grille {
 /////////////////////////////////////////
     
 /////////////// Méthodes /////////////// 
+ // initialisation de grille
+  Grille(){
+      for (int i=0;i<6;i++){ // Double boucle imbriquer qui nous permet de parcourrir tout le tableau
+           for(int j=0;j<7;j++){
+               grille[i][j]= new Cellule();
+            }  
+        }
+    }
     
    public int  ajouterJetonDansColonne(Jeton unJeton, int nbcolonne){
        int i;
@@ -51,8 +59,6 @@ public class Grille {
                 grille[i][j].jetonCourant=null; 
                 grille[i][j].trouNoir=false;
                 grille[i][j].desintegrateur=false;  
-               
-              
            }
        }
    }
@@ -63,13 +69,13 @@ public class Grille {
        for (i=0;i<6;i++){
            for(j=0;j<7;j++){  
               if (grille[i][j].trouNoir == true){ //on affiche d'abord les trou noir car un trou noir peu caché un desintegrateur
-                  System.out.print("T"); 
+                  System.out.print(" T"); 
               }
               else if (grille[i][j].desintegrateur == true){
-                  System.out.print("D");
+                  System.out.print(" D");
               }
               else if (grille[i][j].jetonCourant ==null) {
-                  System.out.print("N");   
+                  System.out.print(" N");   
               }
               else {
                   System.out.print(grille[i][j].jetonCourant); //on peut faire ca car on a creer une méthode string au paravent
@@ -78,7 +84,7 @@ public class Grille {
            System.out.println(" "+(i+1));
        }
        for (int k=0;k<7;k++){
-           System.out.println(" "+(k+1)+" ");
+           System.out.print(" "+(k+1));
        }
        System.out.println();
    }

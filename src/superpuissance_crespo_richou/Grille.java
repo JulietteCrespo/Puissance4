@@ -24,30 +24,34 @@ public class Grille {
             }  
         }
     }
-    
-   public int  ajouterJetonDansColonne(Jeton unJeton, int nbcolonne){
-       int i;
-       for (i=5;i>=0;i--){ // on fait une boucle inversé car pour un puissance4 le premier jeton se retrouvera a la derniére ligne de notre grille
-           if (grille[i][nbcolonne].jetonCourant==null){ // verifie si on peut ajouter le jeton si la grille est null 
-               grille[i][nbcolonne].jetonCourant=unJeton;
-               return i;
-           }   
-       }
-       return i;
-   }
+   /////////////////////////////////////////  
+   public int ajouterJetonDansColonne(Jeton unJeton, int colonne) { //renvoie vrai si le jeton est mis dans la colonne
+        int ligne;
+        boolean resultat = false;
+        int i = 5;
+        while (!resultat && i > -1) {
+            if (!grille[i][colonne].presenceJeton()) {
+                grille[i][colonne].affecterJeton(unJeton);
+                resultat = true;
+            } else {
+                i--;
+            }
+        }
+        ligne = i;
+        return ligne;
+    }
 /////////////////////////////////////////   
-   public boolean etreRemplie(){
-       int i;
-       int j;
-       for (i=0;i<6;i++){ // Double boucle imbriquer qui nous permet de parcourrir tout le tableau
-           for(j=0;j<7;j++){
-              if (grille[i][j]==null) { // il si il y a une cellule null la grille n'est pas vide
-                  return false;
-              }
-           }
-       }
-       return true;
-   }
+    public  boolean etreRemplie() { //Renvoie vrai quand la grille est pleine
+        boolean check = true;
+        for (int i = 0; i < 6; i++) {
+            for (int j = 0; j < 7; j++) {
+                if (!grille[i][j].presenceJeton()) {
+                    check = false;
+                }
+            }
+        }
+        return check;
+    }
 /////////////////////////////////////////   
    public void 	viderGrille(){
        int i;
@@ -69,22 +73,22 @@ public class Grille {
        for (i=0;i<6;i++){
            for(j=0;j<7;j++){  
               if (grille[i][j].trouNoir == true){ //on affiche d'abord les trou noir car un trou noir peu caché un desintegrateur
-                  System.out.print(" T"); 
+                  System.out.print(" T "); 
               }
               else if (grille[i][j].desintegrateur == true){
-                  System.out.print(" D");
+                  System.out.print(" D ");
               }
               else if (grille[i][j].jetonCourant ==null) {
-                  System.out.print(" N");   
+                  System.out.print("   ");   
               }
               else {
                   System.out.print(grille[i][j].jetonCourant); //on peut faire ca car on a creer une méthode string au paravent
               }
            } 
-           System.out.println(" "+(i+1));
+           System.out.println("\u001B[47m " + (i+1) + " \u001B[40m");
        }
        for (int k=0;k<7;k++){
-           System.out.print(" "+(k+1));
+           System.out.print("\u001B[47m "+(k+1)+" \u001B[40m");
        }
        System.out.println();
    }
@@ -101,75 +105,137 @@ public class Grille {
    public String lireCouleurDuJeton(int i, int j){
        return grille[i][j].jetonCourant.couleur;
    }
-/////////////////////////////////////////   
-    public boolean etreGagnantePourJoueur(Joueur unJoueur){
-        boolean resultat=false;
-       String couleurG= unJoueur.couleur; //on défini la couleur du joueur gagnant
-       // 1 - LIGNE : on verifie si il y a des lignes gagnantes
-        for (int i=0;i<6;i++){ // pas besoin n'alller jusqu'a la ligne 6 car on verifie deja 
-           for(int j=0;j<4;j++){
-               if (grille[i][j].jetonCourant!=null && grille[i][j+1].jetonCourant!=null && grille[i][j+2].jetonCourant!=null && grille[i][j+3].jetonCourant!=null){
-              if (grille[i][j].jetonCourant.couleur==grille[i][j+1].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i][j+2].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i][j+3].jetonCourant.couleur ) {
-                   if (grille[i][j].jetonCourant.couleur==couleurG){
-                       System.out.print(unJoueur.nom +" est le gagnant");
-                    resultat =true;
-                    break;
-                   }
+///////////////////////////////////////// 
+
+    boolean etreGagnantePourJoueur(Joueur unJoueur) {
+        boolean verifie = false;
+        boolean verifie2 = false;
+        int compteur = 0;
+        int i = 5;
+        int j;
+        String coul = unJoueur.couleur;
+        // 1 - LIGNE : on verifie si il y a des lignes gagnantes
+        while ((i > -1) && !verifie) { //Change de ligne quand toute la ligne a été vériié
+            j = 0;
+            while ((j < 4) && !verifie && !verifie2) { //Fait avancer sur la ligne
+                for (int k = 0; k < 4; k++) { //Vérifie si il n'y a pas 4 jetons en ligne d'affilés
+                    if (grille[i][j + k].voirJeton() != null) {
+
+                        if (grille[i][j + k].voirJeton().lireCouleur().equals(coul)) { // vérifie si le jeton de la cellule ciblée a la meme couleur que le joueur
+                            compteur++; //incrémente le compteur si c'est la bonne couleur
+
+                        } else {
+                            verifie2=true;
+                            
+                        }
+                    }                  
                 }
-              }
+                if (compteur < 4) {
+                        compteur = 0; // Le reset si il n'est pas arrivé à 4
+                        verifie2=false;
+                    } else {
+                        verifie = true;
+                        System.out.println( unJoueur.nom + "  tu as gagné ! " );
+                    }
+                j++;
             }
-       } 
+            i--;
+        }
         // 2 - COLONNE : on verifie si il y a des colonnes gagnantes
-        for (int i=0;i<3;i++){
-           for(int j=0;j<7;j++){
-               if (grille[i][j].jetonCourant!=null && grille[i+1][j].jetonCourant!=null && grille[i+2][j].jetonCourant!=null && grille[i+3][j].jetonCourant!=null){
-              if ( lireCouleurDuJeton(i+3,j).equals(couleurG) && lireCouleurDuJeton(i,j).equals(couleurG) && lireCouleurDuJeton(i+1,j).equals(couleurG) && lireCouleurDuJeton(i+2,j).equals(couleurG)) {
-                    System.out.print(unJoueur.nom +" est le gagnant");
-                    resultat =true;
-                    break;
+        j = 0;
+        verifie2=false;
+        while ((j < 7) && !verifie) { //Change de colone quand toute la colonne a été vériié
+            i = 0;
+            while ((i < 3) && !verifie && !verifie2) { //Fait avancer sur la colonne
+                for (int k = 0; k < 4; k++) { //Vérifie si il n'y a pas 4 jetons en colonne d'affilés
+                    if (grille[i + k][j].voirJeton() != null) {
+
+                        if (grille[i + k][j].voirJeton().lireCouleur().equals(coul)) { // vérifie si le jeton de la cellule ciblée a la meme couleur que le joueur 
+                            compteur++; //incrémente le compteur si c'est la bonne couleur
+
+                        } else {
+                            verifie2=true;
+                        }
+                    }
                 }
-               }
-            }
-       } 
-        // 3 - DIAGONALE A PENTE POSITIVE : on verifie si il y a des diagonales a pente positive gagnante   
-        for (int i=0;i<3;i++){
-           for(int j=0;j<4;j++){
-               if (grille[i][j].jetonCourant!=null && grille[i+1][j+1].jetonCourant!=null && grille[i+2][j+2].jetonCourant!=null && grille[i+3][j+3].jetonCourant!=null){
-              if (grille[i][j].jetonCourant.couleur==grille[i+1][j+1].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i+2][j+2].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i+3][j+3].jetonCourant.couleur ) {
-                  if (grille[i][j].jetonCourant.couleur==couleurG){
-                      System.out.print(unJoueur.nom +" est le gagnant");
-                    resultat =true;
-                    break;
-                   }
+                if (compteur < 4) {
+                    compteur = 0; // Le reset si il n'est pas arrivé à 4
+                    verifie2=false;
+                } else {
+                    verifie = true;
+                    System.out.println( unJoueur.nom + "  tu as gagné ! " );
+                    
                 }
-               }
+                i++;
             }
-       }  
+            j++;
+        }
+        // 3 - DIAGONALE A PENTE POSITIVE : on verifie si il y a des diagonales a pente positive gagnante 
+        i = 0;
+        verifie2=false;
+        while ((i < 3) && !verifie) { //Change de ligne quand toute la ligne a été vériié
+            j = 0;
+            while ((j < 4) && !verifie && !verifie2) { //Fait avancer sur la ligne
+                for (int k = 0; k < 4; k++) { //Vérifie si il n'y a pas 4 jetons en ligne d'affilés
+                    if (grille[i + k][j + k].voirJeton() != null) {
+                        if (grille[i + k][j + k].voirJeton().lireCouleur().equals(coul)) { // vérifie si le jeton de la cellule ciblée a la meme couleur que le joueur 
+                            compteur++; //incrémente le compteur si c'est la bonne couleur
+
+                        } else {
+                            verifie2=true;
+                        }
+                    }
+                }
+                if (compteur < 4) {
+                    compteur = 0; // Le reset si il n'est pas arrivé à 4
+                    verifie2=false;
+                } else {
+                    verifie = true;
+                    System.out.println( unJoueur.nom + "  tu as gagné ! " );
+                }
+                j++;
+            }
+            i++;
+        }
         // 4 - DIAGONALE A PENTE NEGATIVE : on verifie si il y a des diagonales a pente negative gagnant  
-      for (int i=5;i>2;i--){
-           for(int j=0;j<4;j++){
-               if (grille[i][j].jetonCourant!=null && grille[i-1][j+1].jetonCourant!=null && grille[i-2][j+2].jetonCourant!=null && grille[i-3][j+3].jetonCourant!=null){
-              if (grille[i][j].jetonCourant.couleur==grille[i-1][j+1].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i-2][j+2].jetonCourant.couleur && grille[i][j].jetonCourant.couleur==grille[i-3][j+3].jetonCourant.couleur ) {
-                  if (grille[i][j].jetonCourant.couleur==couleurG){
-                      System.out.print(unJoueur.nom +" est le gagnant");
-                    resultat =true;
-                    break;   
-                   }
+        i = 0;
+        verifie2=false;
+        while ((i < 3) && !verifie) { //Change de ligne quand toute la ligne a été vériié
+            j = 6;
+            while ((j > 4) && !verifie && !verifie2) { //Fait avancer sur la ligne
+                for (int k = 0; k < 4; k++) { //Vérifie si il n'y a pas 4 jetons en ligne d'affilés
+                    if (grille[i + k][j - k].voirJeton() != null) {
+                        if (grille[i + k][j - k].voirJeton().lireCouleur().equals(coul)) { // vérifie si le jeton de la cellule ciblée a la meme couleur que le joueur 
+                            compteur++; //incrémente le compteur si c'est la bonne couleur
+
+                        } else {
+                            verifie2=true;
+                        }
+                    }
                 }
-               }
+                if (compteur < 4) {
+                    compteur = 0; // Le reset si il n'est pas arrivé à 4
+                    verifie2=false;
+                } else {
+                    verifie = true;
+                    System.out.println( unJoueur.nom + "  tu as gagné ! " );
+                }
+                j--;
             }
-       }  
-      
-    return resultat;  
+            i++;
+        }
+        
+        return verifie;
     }
 /////////////////////////////////////////    
     public void tasserGrille(int ligne, int colonne){
-        for (int i= ligne; i< 6; i++){
-            if (i==5){ // comme on tasse les ligne l derniere ligne sera forcement null
+        for (int i= ligne; i> 0; i--){
+            if (i==0){ // comme on tasse les ligne l derniere ligne sera forcement null
                 grille[i][colonne].jetonCourant = null;
             }
             else{ //sinon on decale d'une ligne
                 grille[i][colonne].jetonCourant = grille[i+1][colonne].jetonCourant;
+                grille[i][colonne].jetonCourant = null;
             }
         }
     } 
@@ -216,6 +282,19 @@ public class Grille {
         grille[i][j].supprimerJeton();
         return recupJeton;
         
-    }   
+    }
+    
+ /////////////////////////////////////////   
+     public void tasserColonne(int colonne){ //tasse les colonne
+       // tasse quand il y a une case null
+       // (decale tout les cases 
+        for(int i=5; i>0;i--){
+           if(grille[i][colonne].jetonCourant==null && grille[i-1][colonne].jetonCourant!=null){
+               grille[i][colonne].jetonCourant=grille[i-1][colonne].jetonCourant;
+               grille[i-1][colonne].jetonCourant=null;
+           } 
+        }
+        
+    }
 }
 /////////////////////////////////////////

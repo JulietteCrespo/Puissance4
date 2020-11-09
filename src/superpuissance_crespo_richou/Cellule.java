@@ -44,10 +44,12 @@ public boolean affecterJeton(Jeton unjeton){
  /////////////////////////////////////////
  public boolean supprimerJeton(){
      if (jetonCourant==null){ // on supprime le jeton si c'est possible
+         System.out.println("Il n'y avait pas de jeton ici...");
          return false;
      }
      else {
          jetonCourant = null;
+         System.out.println("Le jeton a été désintégré !");
          return true;
      }
  }
@@ -106,10 +108,24 @@ public boolean affecterJeton(Jeton unjeton){
           return false;
       }
       else{
-          supprimerJeton();// si on active le trou noir on supprime la valeur du jeton
+          jetonCourant= null;// si on active le trou noir on supprime la valeur du jeton
           trouNoir=false;
+          System.out.println("Le trou noir a détruit le jeton !");
           return true;
       }
   }
+  
+
+/////////////////////////////////////////
+  // nous permet de savor si il y a un jeton
+  public boolean presenceJeton(){
+      return jetonCourant!= null;
+  }
+  /////////////////////////////////////////
+  public Jeton voirJeton() {
+        return jetonCourant;
+    }
+
 }
 /////////////////////////////////////////
+
